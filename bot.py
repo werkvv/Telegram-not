@@ -6,15 +6,21 @@ OWNER_ID = 123456789  # ← TU wpisz swój Telegram ID
 
 warns = {}
 
-def is_admin(user_id):
-    return user_id == OWNER_ID
+async def is_admin(update, context):
+    user_id = update.effective_user.id
+    chat_id = update.effective_chat.id
+
+    member = await context.bot.get_chat_member(chat_id, user_id)
+
+    return member.status in ["administrator", "creator"]
+
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("Bot admina działa 🔥")
 
 # WARN SYSTEM
 async def warn(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    if not is_admin(update.effective_user.id):
+    if not await is_admin(update.effective_user.id):
         return
 
     if update.message.reply_to_message:
@@ -32,7 +38,7 @@ async def warn(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 # KICK
 async def kick(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    if not is_admin(update.effective_user.id):
+    if not await is_admin(update.effective_user.id):
         return
 
     if update.message.reply_to_message:
@@ -43,7 +49,7 @@ async def kick(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 # BAN
 async def ban(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    if not is_admin(update.effective_user.id):
+    if not await is_admin(update.effective_user.id):
         return
 
     if update.message.reply_to_message:
@@ -53,7 +59,7 @@ async def ban(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 # UNBAN
 async def unban(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    if not is_admin(update.effective_user.id):
+    if not await is_admin(update.effective_user.id):
         return
 
     if context.args:
@@ -63,7 +69,7 @@ async def unban(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 # MUTE
 async def mute(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    if not is_admin(update.effective_user.id):
+    if not await is_admin(update.effective_user.id):
         return
 
     if update.message.reply_to_message:
