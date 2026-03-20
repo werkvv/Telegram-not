@@ -1,7 +1,7 @@
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 
-TOKEN = "8727235182:AAG5HtJZuiV8PciG_MeZhAfgKTcKnYfqkFo"
+TOKEN = "8727235182:AAFYIfiWz9sdlL7xFs_EX5gbI0i_HKY8kzE"
 OWNER_ID = 123456789  # ← TU wpisz swój Telegram ID
 
 warns = {}
