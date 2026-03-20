@@ -7,12 +7,9 @@ OWNER_ID = 123456789  # ← TU wpisz swój Telegram ID
 warns = {}
 
 async def is_admin(update, context):
-    user_id = update.effective_user.id
-    chat_id = update.effective_chat.id
-
-    member = await context.bot.get_chat_member(chat_id, user_id)
-
-    return member.status in ["administrator", "creator"]
+    admins = await context.bot.get_chat_administrators(update.effective_chat.id)
+    admin_ids = [admin.user.id for admin in admins]
+    return update.effective_user.id in admin_ids
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -20,7 +17,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 # WARN SYSTEM
 async def warn(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    if not await is_admin(update.effective_user.id):
+    if not await is_admin(update, context):
         return
 
     if update.message.reply_to_message:
@@ -38,7 +35,7 @@ async def warn(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 # KICK
 async def kick(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    if not await is_admin(update.effective_user.id):
+    if not await is_admin(update, context):
         return
 
     if update.message.reply_to_message:
@@ -49,7 +46,7 @@ async def kick(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 # BAN
 async def ban(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    if not await is_admin(update.effective_user.id):
+    if not await is_admin(update, context):
         return
 
     if update.message.reply_to_message:
@@ -59,7 +56,7 @@ async def ban(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 # UNBAN
 async def unban(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    if not await is_admin(update.effective_user.id):
+  if not await is_admin(update, context):
         return
 
     if context.args:
@@ -69,7 +66,7 @@ async def unban(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 # MUTE
 async def mute(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    if not await is_admin(update.effective_user.id):
+    if not await is_admin(update, context):
         return
 
     if update.message.reply_to_message:
