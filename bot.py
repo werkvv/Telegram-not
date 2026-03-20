@@ -67,18 +67,49 @@ async def unban(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("Odbanowano użytkownika 🔓")
 
 # MUTE
+from telegram import ChatPermissions
+
 async def mute(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not await is_admin(update, context):
         return
 
     if update.message.reply_to_message:
         user_id = update.message.reply_to_message.from_user.id
+
         await context.bot.restrict_chat_member(
             chat_id=update.effective_chat.id,
             user_id=user_id,
-            permissions={}
+            permissions=ChatPermissions(can_send_messages=False)
         )
+
         await update.message.reply_text("Wyciszono użytkownika 🔇")
+
+
+async def unmute(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if not await is_admin(update, context):
+        return
+
+    if update.message.reply_to_message:
+        user_id = update.message.reply_to_message.from_user.id
+
+        await context.bot.restrict_chat_member(
+            chat_id=update.effective_chat.id,
+            user_id=user_id,
+            permissions=ChatPermissions(
+                can_send_messages=True,
+                can_send_polls=True,
+                can_send_other_messages=True,
+                can_add_web_page_previews=True,
+                can_send_audios=True,
+                can_send_documents=True,
+                can_send_photos=True,
+                can_send_videos=True,
+                can_send_video_notes=True,
+                can_send_voice_notes=True
+            )
+        )
+
+        await update.message.reply_text("Odmutowano użytkownika 🔊")
 
 app = ApplicationBuilder().token(TOKEN).build()
 
@@ -88,5 +119,6 @@ app.add_handler(CommandHandler("kick", kick))
 app.add_handler(CommandHandler("ban", ban))
 app.add_handler(CommandHandler("unban", unban))
 app.add_handler(CommandHandler("mute", mute))
+app.add_handler(CommandHandler("unmute", unmute))
 
 app.run_polling()
