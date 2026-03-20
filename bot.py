@@ -58,7 +58,7 @@ async def ban(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 # UNBAN
 async def unban(update: Update, context: ContextTypes.DEFAULT_TYPE):
-  if not await is_admin(update, context):
+    if not await is_admin(update, context):
         return
 
     if context.args:
