@@ -7,9 +7,11 @@ OWNER_ID = 123456789  # ← TU wpisz swój Telegram ID
 warns = {}
 
 async def is_admin(update, context):
-    admins = await context.bot.get_chat_administrators(update.effective_chat.id)
-    admin_ids = [admin.user.id for admin in admins]
-    return update.effective_user.id in admin_ids
+    member = await context.bot.get_chat_member(
+        update.effective_chat.id,
+        update.effective_user.id
+    )
+    return member.status in ["administrator", "creator"]
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
