@@ -1,3 +1,7 @@
+import re
+from datetime import datetime, timedelta
+from telegram import ChatPermissions
+
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 
@@ -67,7 +71,6 @@ async def unban(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("Odbanowano użytkownika 🔓")
 
 # MUTE
-from telegram import ChatPermissions
 
 async def mute(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not await is_admin(update, context):
@@ -75,9 +78,6 @@ async def mute(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     if update.message.reply_to_message:
         user_id = update.message.reply_to_message.from_user.id
-
-      from datetime import datetime, timedelta
-import re
 
 args = context.args
 
