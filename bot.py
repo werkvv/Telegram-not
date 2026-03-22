@@ -76,11 +76,33 @@ async def mute(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.message.reply_to_message:
         user_id = update.message.reply_to_message.from_user.id
 
-        await context.bot.restrict_chat_member(
-            chat_id=update.effective_chat.id,
-            user_id=user_id,
-            permissions=ChatPermissions(can_send_messages=False)
-        )
+      from datetime import datetime, timedelta
+import re
+
+args = context.args
+
+duration = timedelta(hours=1)
+
+if args:
+    match = re.match(r"(\d+)([mhd])", args[0])
+    if match:
+        value, unit = match.groups()
+
+        if unit == "m":
+            duration = timedelta(minutes=int(value))
+        elif unit == "h":
+            duration = timedelta(hours=int(value))
+        elif unit == "d":
+            duration = timedelta(days=int(value))
+
+until_date = datetime.now() + duration
+
+await context.bot.restrict_chat_member(
+    chat_id=update.effective_chat.id,
+    user_id=user_id,
+    permissions=ChatPermissions(can_send_messages=False),
+    until_date=until_date
+)
 
         await update.message.reply_text("Wyciszono użytkownika 🔇")
 
