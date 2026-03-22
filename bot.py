@@ -76,16 +76,12 @@ async def mute(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not await is_admin(update, context):
         return
 
-    if update.message.reply_to_message:
-    user_id = update.message.reply_to_message.from_user.id
-    args = context.args
-
 if update.message.reply_to_message:
     user_id = update.message.reply_to_message.from_user.id
     args = context.args
     duration = timedelta(hours=1)
 
-if args:
+    if args:
     match = re.match(r"(\d+)([mhd])", args[0])
     if match:
         value, unit = match.groups()
